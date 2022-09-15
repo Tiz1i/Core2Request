@@ -1,0 +1,152 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="col-12 h-100 b-custom style=background-color: #8fc4b7;"> 
+    <section class="h-100" style="background-color: #8fc4b7;">
+        <div class="container h-100 style=background-color: #8fc4b7;">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-md-12 col-xl-9" style="margin: 30px 0;">
+                    <div class="card text-black" style="border-radius: 25px;">
+                        <div class="card-body p-md-5">
+                            <div class="row justify-content-center">
+                                <div class="col-md-10 col-lg-9 col-xl-8">
+
+                                    <div class="row mb-5">
+                                        <h1 class="display-12 col-8">
+                                            Welcome @ViewBag.iLoguari.Firstname
+                                        </h1>        
+                                        <div class="col-4" style="text-align: right;">
+                                            <a href="/logout" class="btn btn-danger ml-2">logout</a>
+                                        </div>
+                                    </div>
+
+                                    @* Request Part *@
+                                    <div class="column">
+                                        <div class="col-sm-12 mb-3">
+                                            <h3>Add Friends</h3>
+                                            <table class="table border-light">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th style="text-align: right;">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var perdorues in ViewBag.perdoruesit)
+                                                    {
+                                                        <tr>
+                                                            <td>@perdorues.Firstname</td>
+                                                            <td style="text-align: right;">
+                                                                <a href="/Send/@perdorues.UserId" class="btn btn-success">Send Request</a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div> 
+
+                                        @* Frendsat *@
+                                        <div class="col-sm-12 mb-3">
+                                            <h3>Friends</h3>
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th style="text-align: right;">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var miqte in ViewBag.miqte)
+                                                    {
+                                                        <tr>
+                                                            @if(miqte.SenderId == ViewBag.iLoguari.UserId)
+                                                            {
+                                                                <td>@miqte.Reciver.Firstname</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td>@miqte.Sender.Firstname</td>
+                                                            }
+                                                            <td style="text-align: right;">
+                                                                <a href="/Remove/@miqte.RequestId" class="btn btn-danger">Remove</a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    @* Requests *@
+                                    <div class="col-sm-12 mb-3">
+                                        <h3>Requests</h3>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">Name</th>
+                                                    <th style="text-align: right;">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var request in ViewBag.requests)
+                                                {
+                                                    <tr>
+                                                        <td>@request.RequestId</td>
+                                                        <td>@request.Sender.Firstname @request.Reciver.Firstname</td>
+                                                        <td style="text-align: right;">
+                                                            <a href="/Accept/@request.RequestId" class="btn btn-primary">Accept</a> 
+                                                            <a href="/Decline/@request.RequestId" class="btn btn-danger">Decline</a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    @* Postimet *@
+                                    <div class="col-sm-4">
+                                        <h3>Posts</h3>
+                                    
+                                        <a href="/Post/Add" class="btn btn-primary mb-1">Create Post</a>
+                                        
+                                        <div>
+                                            @foreach (var post in ViewBag.posts)
+                                            {
+                                                <p>@post.Description</p>
+                                                <p>@post.Likes.Count</p>
+                                                @if (@post.Creator.UserId == @ViewBag.iLoguari.UserId)
+                                                {
+                                                    <a href="/Post/Delete/@post.PostId" class="btn btn-danger row float-end">Delete</a>
+                                                    @* <a href="/Post/Edit/@post.PostId" class="btn btn-primary">Edit</a>  *@
+                                                }
+                                                {
+                                                    var id = 0;
+                                                    @foreach (var like in post.Likes)
+                                                    {
+                                                        if (like.UserId == @ViewBag.iLoguari.UserId)
+                                                        {
+                                                            id = like.PostId;
+                                                            break;
+                                                        }
+                                                    }
+                                                    @if (id == 0)
+                                                    {
+                                                        <a href="/Post/Like/@post.PostId" class="btn btn-primary mr-2">Like</a>
+                                                    }
+                                                    else {
+                                                        <a href="/Post/Unlike/@ViewBag.iLoguari.UserId/@post.PostId" class="btn btn-primary">Unlike</a> 
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                    </div>  
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
